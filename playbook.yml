@@ -1,0 +1,30 @@
+hosts: webservers
+remote_user: 94109313
+
+tasks:
+- name: install git
+  apt:
+    name: git
+    state: latest
+- name: clone repo
+  git:
+    repo: git@github.com:SMAKH/ansible.git
+    dest: ~/ansible
+    clone: true
+- name: install nginx
+  apt:
+    name: nginx
+    state: latest
+- name: copy nginx config
+  copy:
+    src: ~/ansible/nginxdefault
+    dest: /etc/nginx/sites-available/default
+- name: copy index file
+  copy:
+    src: ~/ansible/welcome-to-me.html
+    dest: /var/www/html/welcome-to-me.html
+
+- name: restart nginx
+  service: 
+    name: nginx
+    state: restarted
